@@ -1,2 +1,2 @@
 # InvestApp
-Neste momento o código está na branch master, pode ir lá conferir!
+Neste momento o código está na branch desenvolvimento, pode ir lá conferir!
