@@ -73,11 +73,11 @@ function buscaCotacao(ativo, tdCotacao, tdVarDia) {
         if (request.status === 200){
             let ativoResultado = JSON.parse(request.responseText);
             tdCotacao.innerText =   ativoResultado.results[ativo]['price'];
-            tdVarDia.innerText =    ativoResultado.results[ativo]['change_percent'];
+            tdVarDia.innerText =    ativoResultado.results[ativo]['change_percent'] + '%';
 
         } else {
-            tdCotacao.innerText =   'N/A';
-            tdVarDia.innerText =    'N/A';
+            tdCotacao.innerText = 'N/A';
+            tdVarDia.innerText = 'N/A';
         }
 
     });
