@@ -39,39 +39,22 @@ function atualizaCotacoes() {
 
         }
 
-        //
+        //Busca pelas <tr> e em seguida pelas <td>
         let trs = tabela.querySelectorAll('tr');
-        console.log('11 ' + trs.length);
         
         if (trs.length > 0) {
             
             for (let i = 0; i < trs.length; i++) {
                 let tr = trs[i];
                 let tds = tr.querySelectorAll('td');
-                console.log('22 ' + tds.length);
                 
                 if (tds.length > 0) {
                     
-                    for (let i = 0; i < tds.length; i++) {
-                        let td = tds[i];
-    
-                        if (td.className === 'ativo') {
-                            let ativo = td.innerText;
-                            
-                            //let cotacao = buscaCotacao(ativo);
-                            //console.log(cotacao);
-    
-                            //if (cotacao != undefined) {
-                                
-                                let tdCotacao = tds[1];
-                                let tdVarDia = tds[2];
-                                //tdCotacao.innerText = buscaCotacao(ativo);
-                                buscaCotacao(ativo, tdCotacao, tdVarDia);
-                                //tdCotacao.innerText = retornaBlast();
-                            //}
-                        }
-                        
-                    }
+                    let td = tds[0];
+                    let ativo = td.innerText;    
+                    let tdCotacao = tds[1];
+                    let tdVarDia = tds[2];
+                    buscaCotacao(ativo, tdCotacao, tdVarDia);
                 }
             }   
         }
@@ -85,9 +68,19 @@ function buscaCotacao(ativo, tdCotacao, tdVarDia) {
     let url = `https://api.hgbrasil.com/finance/stock_price?key=b167f9b0&symbol=${ativo}`
     //url = `http://viacep.com.br/ws/23094100/json/`;
 
-    //console.log(url);
+    request.addEventListener('readystatechange', () => {
+        
+        if (request.status === 200){
+            let ativoResultado = JSON.parse(request.responseText);
+            tdCotacao.innerText =   ativoResultado.results[ativo]['price'];
+            tdVarDia.innerText =    ativoResultado.results[ativo]['change_percent'];
 
-    let cotacao;
+        } else {
+            tdCotacao.innerText =   'N/A';
+            tdVarDia.innerText =    'N/A';
+        }
+
+    });
 
     request.open('GET', proxy + url);
 
@@ -99,28 +92,6 @@ function buscaCotacao(ativo, tdCotacao, tdVarDia) {
     //request.setRequestHeader('access_token', 'MEUTOKEN'); //Obrigatorio API
 
     request.send();
-
-    request.addEventListener('readystatechange', () => {
-        
-        if (request.status === 200){
-            let ativoResultado = JSON.parse(request.responseText);
-            
-            console.log(ativoResultado.results[ativo]['price']);
-
-            cotacao = ativoResultado.results[ativo]['price'];
-
-            tdCotacao.innerText = cotacao;
-            tdVarDia.innerText = ativoResultado.results[ativo]['change_percent'];
-
-            //let cotacao = ativoResultado.name;
-            //console.log(cotacao);
-            //console.log(request.responseText);           
-        } else {
-           
-            return 'N/A';
-        }
-
-    });
 
 }
 
@@ -136,10 +107,6 @@ function buscaCotacao(ativo, tdCotacao, tdVarDia) {
 //Access-Control-Allow-Headers: *
 //Access-Control-Max-Age: 86400
 
-function retornaBlast() {
-    
-    return 10000;
-}
 
 
 window.addEventListener('load', () => {
