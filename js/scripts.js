@@ -55,6 +55,11 @@ function atualizaCotacoes() {
                     let tdCotacao = tds[1];
                     let tdVarDia = tds[2];
                     buscaCotacao(ativo, tdCotacao, tdVarDia);
+
+                    let tdPrecoMedio = tds[4];
+                    let tdPosicao = tds[5];
+                    //tdCotacao = tds[1];
+                    calculaPosicao(tdCotacao.innerText, tdPrecoMedio.innerText, tdPosicao);
                 }
             }   
         }
@@ -75,6 +80,8 @@ function buscaCotacao(ativo, tdCotacao, tdVarDia) {
             tdCotacao.innerText =   ativoResultado.results[ativo]['price'];
             tdVarDia.innerText =    ativoResultado.results[ativo]['change_percent'] + '%';
 
+            //return ativoResultado.results[ativo]['price'];
+
         } else {
             tdCotacao.innerText = 'N/A';
             tdVarDia.innerText = 'N/A';
@@ -82,7 +89,7 @@ function buscaCotacao(ativo, tdCotacao, tdVarDia) {
 
     });
 
-    request.open('GET', proxy + url);
+    request.open('GET', proxy + url, false);
 
     //request.setRequestHeader('Access-Control-Allow-Origin', '*');
     //request.setRequestHeader('Accept', '*/*');
@@ -107,7 +114,19 @@ function buscaCotacao(ativo, tdCotacao, tdVarDia) {
 //Access-Control-Allow-Headers: *
 //Access-Control-Max-Age: 86400
 
+function calculaPosicao(cotacao, precoMedio, tdPosicao) {
+    tdPosicao.innerText = 'N/A';
+    if (precoMedio != '') {
+        if (cotacao != 'N/A') {
+            tdPosicao.innerText = ((cotacao - precoMedio) / precoMedio * 100).toFixed(2) + '%';
+        }
+    }
 
+    //let teste = 10.232222222222;
+    //teste = teste.toFixed(Math.max(1, teste.toString().substr(teste.toString().indexOf(".")+1).length));
+    //teste = teste.toFixed(2);
+    //console.log(teste);
+}
 
 window.addEventListener('load', () => {
     atualizaCotacoes();
